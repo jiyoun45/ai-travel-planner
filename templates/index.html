@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 맞춤 여행 플래너</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 영역 -->
+        <header class="app-header">
+            <div class="logo-area">
+                <span class="logo-icon">✈️</span>
+                <h1>AI 맞춤 여행 플래너</h1>
+            </div>
+            <p class="subtitle">여행 정보를 입력하시면 Gemini AI가 딱 맞는 상세 여행 일정을 추천해 드립니다.</p>
+        </header>
+
+        <!-- 메인 콘텐츠 영역 -->
+        <main class="main-content">
+            <!-- 1. 여행 정보 입력 폼 카드 -->
+            <section class="card form-card">
+                <h2>여행 정보 입력</h2>
+                <form id="trip-form">
+                    <!-- 여행지 입력 -->
+                    <div class="form-group">
+                        <label for="destination">여행지 <span class="required">*</span></label>
+                        <input type="text" id="destination" name="destination" placeholder="예: 제주도, 오사카, 파리, 강릉" required>
+                        <small class="help-text">가고 싶은 도시나 지역명을 입력하세요.</small>
+                    </div>
+
+                    <!-- 여행 일정 (시작일 / 종료일) -->
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label for="start_date">여행 시작일 <span class="required">*</span></label>
+                            <input type="date" id="start_date" name="start_date" required>
+                        </div>
+                        <div class="form-group col">
+                            <label for="end_date">여행 종료일 <span class="required">*</span></label>
+                            <input type="date" id="end_date" name="end_date" required>
+                        </div>
+                    </div>
+
+                    <!-- 예산 수준 -->
+                    <div class="form-group">
+                        <label for="budget">여행 예산 선호</label>
+                        <select id="budget" name="budget">
+                            <option value="">선택해주세요 (기본: 적정 수준)</option>
+                            <option value="가성비 실속형 (최소 비용 위주)">가성비 실속형 (최소 비용 위주)</option>
+                            <option value="가심비 적정형 (보통 수준의 일반적인 여행)">가심비 적정형 (보통 수준의 일반적인 여행)</option>
+                            <option value="여유로운 럭셔리형 (호화롭고 편안한 여행)">여유로운 럭셔리형 (호화롭고 편안한 여행)</option>
+                        </select>
+                    </div>
+
+                    <!-- 주요 관심사 (다중 선택 체크박스) -->
+                    <div class="form-group">
+                        <label>주요 관심사 (다중 선택 가능)</label>
+                        <div class="checkbox-grid">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="interests" value="맛집 탐방">
+                                <span>🍜 맛집 탐방</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="interests" value="관광/역사 명소">
+                                <span>🏛️ 관광/명소</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="interests" value="자연/풍경 힐링">
+                                <span>🌲 자연/풍경</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="interests" value="휴양/호캉스">
+                                <span>🏖️ 휴양/휴식</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="interests" value="쇼핑">
+                                <span>🛍️ 쇼핑</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="interests" value="문화/예술 전시">
+                                <span>🎨 문화/예술</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="interests" value="액티비티/체험">
+                                <span>🏄 액티비티</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="interests" value="야경/야간활동">
+                                <span>🌙 야경/야간</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 동행자 및 이동수단 -->
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label for="companions">동행자</label>
+                            <select id="companions" name="companions">
+                                <option value="혼자">혼자</option>
+                                <option value="친구와 함께">친구와 함께</option>
+                                <option value="연인/커플">연인/커플</option>
+                                <option value="가족과 함께 (아이 동반)">가족 (아이 동반)</option>
+                                <option value="가족과 함께 (부모님 동반)">가족 (부모님 동반)</option>
+                                <option value="단체/동호회 모임">단체 모임</option>
+                            </select>
+                        </div>
+                        <div class="form-group col">
+                            <label for="transportation">선호 이동수단</label>
+                            <select id="transportation" name="transportation">
+                                <option value="대중교통 (지하철, 버스, 기차)">대중교통 (지하철, 버스)</option>
+                                <option value="렌터카 / 자가용">렌터카 / 자가용</option>
+                                <option value="도보 중심">도보 중심</option>
+                                <option value="택시 / 차량 호출 서비스">택시 / 차량 호출</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 숙소 선호 -->
+                    <div class="form-group">
+                        <label for="accommodation">숙소 선호 스타일</label>
+                        <select id="accommodation" name="accommodation">
+                            <option value="깔끔한 비즈니스 호텔 / 가성비 호텔">깔끔한 비즈니스 / 가성비 호텔</option>
+                            <option value="고급 호텔 / 5성급 리조트">고급 호텔 / 리조트</option>
+                            <option value="감성 숙소 / 에어비앤비">감성 숙소 / 독채 에어비앤비</option>
+                            <option value="게스트하우스 / 호스텔">게스트하우스 / 호스텔</option>
+                            <option value="한옥 / 전통 가옥">전통 가옥 / 한옥</option>
+                        </select>
+                    </div>
+
+                    <!-- 사용자 에러 메시지 알림 박스 -->
+                    <div id="error-box" class="error-box hidden" role="alert"></div>
+
+                    <!-- 제출 버튼 -->
+                    <button type="submit" id="submit-btn" class="btn btn-primary">
+                        <span>✨ AI 여행 일정 생성하기</span>
+                    </button>
+                </form>
+            </section>
+
+            <!-- 2. 로딩 안내 카드 (초기에는 숨김) -->
+            <section id="loading-card" class="card loading-card hidden" aria-live="polite">
+                <div class="spinner"></div>
+                <h3>여행 일정을 만들고 있어요...</h3>
+                <p>Gemini AI가 이동 동선과 맞춤형 일정을 꼼꼼히 정리하고 있습니다. 잠시만 기다려주세요.</p>
+            </section>
+
+            <!-- 3. 결과 표시 카드 (초기에는 숨김) -->
+            <section id="result-card" class="card result-card hidden">
+                <div class="result-header">
+                    <h2>📋 완성된 AI 맞춤 여행 계획</h2>
+                    <div class="button-group">
+                        <button type="button" id="copy-btn" class="btn btn-secondary">
+                            📋 전체 일정 복사
+                        </button>
+                        <button type="button" id="download-btn" class="btn btn-secondary">
+                            💾 Markdown 다운로드
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 복사 성공 토스트 알림 -->
+                <div id="copy-toast" class="toast hidden">여행 일정이 클립보드에 복사되었습니다.</div>
+
+                <!-- 실제 AI 생성 마크다운 일정 내용 -->
+                <div id="plan-output" class="plan-output"></div>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <p>※ 주의: 실시간 운영시간, 입장료, 예약 상태 및 가격 등은 변동될 수 있으므로 여행 전 현장 또는 공식 채널 확인이 필요합니다.</p>
+        </footer>
+    </div>
+
+    <!-- 프론트엔드 제어 스크립트 연결 -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
