@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI 맞춤 여행 플래너</title>
     <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="manifest" href="/static/manifest.json">
 </head>
 <body>
     <div class="container">
@@ -174,5 +175,20 @@
 
     <!-- 프론트엔드 제어 스크립트 연결 -->
     <script src="/static/js/app.js"></script>
+
+    <!-- PWA Service Worker 등록 스크립트 -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                        console.log('Service Worker 등록 성공:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.error('Service Worker 등록 실패:', error);
+                    });
+            });
+        }
+    </script>
 </body>
 </html>

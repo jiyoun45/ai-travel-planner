@@ -33,6 +33,9 @@ def index():
     return render_template("index.html")
 
 
+@app.route("/sw.js")
+def service_worker():
+    return app.send_static_file("sw.js")
 @app.route("/generate", methods=["POST"])
 def generate():
     """사용자 입력을 바탕으로 Gemini AI 여행 일정 생성"""
